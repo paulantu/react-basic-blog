@@ -1,36 +1,34 @@
-import React, { useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { login as authLogin } from '../store/authSlice'
-import { Button, Input } from './index'
-import Logo from './Logo/Logo'
+import React, {useState} from 'react'
+import authService from '../appwrite/auth'
+import { Link, useNavigate } from 'react-router-dom'
+import { login } from '../store/authSlice'
+import { Button, Input, Logo } from './index'
 import { useDispatch } from 'react-redux'
-import authService, { AuthService } from '../appwrite/auth'
 import { useForm } from 'react-hook-form'
 
+function Signup() {
 
-function Login() {
-
-    const navigation = useNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {register, handleSubmit} = useForm();
     const [error, setError] = useState('');
+    const {register, handleSubmit} = useForm();
 
 
-    const login = async() => {
-        setError("");
+    const userSignup = async(data) => {
+        setError('')
         try {
-            const session = await authService.login(data);
-            if (session) {
+            const userData = await authService.createAccount(data);
+
+            if (userData) {
                 const userData = await authService.getCurrentUser();
-                if (userData) dispatch(authLogin(userData));
-                Navigate('/');   
+
+                if (userData) dispatch(login(userData));
+                navigate('/')
             }
         } catch (error) {
             setError(error.message);
         }
     }
-
-
 
   return (
     <div
@@ -50,21 +48,21 @@ function Login() {
             </div>
 
             <h2
-            className='text-center text-2xl font-bold'
+            className='text-center text-2xl font-bold leading-tight'
             >
-                Sign in to your account
+                Sign up to create an account
             </h2>
 
             <p
             className='mt-2 text-center text-base text-black/60'
             >
-                Don&apos;t have any account?
+                Already have an account?
                 &nbsp;
                 <Link
-                to={`/signup`}
+                to={`/login`}
                 className='font-medium text-primary transition-all duration-200 hover:underline'
                 >
-                    Sign Up
+                    Sign In
                 </Link>
             </p>
 
@@ -72,25 +70,33 @@ function Login() {
 
 
 
+
             <form
-            onSubmit={handleSubmit(login)}
-            className='mt-8'
+            onSubmit={handleSubmit(userSignup)}
             >
                 <div
                 className='space-y-5'
                 >
                     <Input
-                    lebel="Email: "
-                    placeholder="Enter your email"
-                    type="email"
-                    {...register("email", {
-                        required: true,
-                        validate: {
-                            matchPatern: (value) => {
-                                /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(value) || "Please enter a valid email"
+                        label= "Full Name: "
+                        placeholder= "Enter your full name"
+                        {...register("name",{
+                            required: true
+                        })}
+                    />
+
+                    <Input
+                        lebel="Email: "
+                        placeholder="Enter your email"
+                        type="email"
+                        {...register("email", {
+                            required: true,
+                            validate: {
+                                matchPatern: (value) => {
+                                    /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(value) || "Please enter a valid email"
+                                }
                             }
-                        }
-                    })}
+                        })}
                     />
 
                     <Input
@@ -103,17 +109,18 @@ function Login() {
                     />
 
                     <Button
-                    type="submit"
-                    className="w-full"
-                    >
-                        Sign in
+                        type="submit"
+                        className="w-full"
+                        >
+                            Sign Up
                     </Button>
                 </div>
             </form>
+
         </div>
 
     </div>
   )
 }
 
-export default Login
+export default Signup
