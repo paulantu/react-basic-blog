@@ -11,8 +11,10 @@ export class AuthService {
         this.client.setEndpoint(config.appWriteUrl)
                     .setProject(config.appWriteProjectId);
         this.account = new Account(this.client);
-
     }
+
+
+
 
 
     async createAccount({email, password, name}){
@@ -21,6 +23,8 @@ export class AuthService {
 
             if (userAccount) {
                 return this.userLogin({email, password});
+                // Call another method
+
             } else {
                 return userAccount;
             }
@@ -44,18 +48,27 @@ export class AuthService {
         try {
             return await this.account.get();
         } catch (error) {
-            throw error;
+            // throw error;
+            console.log("Appwrite serive :: getCurrentUser :: error", error);
         }
 
         return null;
     }
 
 
+
+
+
+
+
+
+
     async logOut(){
         try {
             await this.account.deleteSessions();
         } catch (error) {
-            throw error;
+            // throw error;
+            console.log("Appwrite serive :: logout :: error", error);
         }
     }
 }

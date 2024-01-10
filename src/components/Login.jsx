@@ -1,29 +1,29 @@
 import React, { useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { login as authLogin } from '../store/authSlice'
 import { Button, Input } from './index'
 import Logo from './Logo/Logo'
 import { useDispatch } from 'react-redux'
-import authService, { AuthService } from '../appwrite/auth'
+import authService from '../appwrite/auth'
 import { useForm } from 'react-hook-form'
 
 
 function Login() {
 
-    const navigation = useNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const {register, handleSubmit} = useForm();
     const [error, setError] = useState('');
 
 
-    const login = async() => {
+    const login = async(data) => {
         setError("");
         try {
             const session = await authService.login(data);
             if (session) {
                 const userData = await authService.getCurrentUser();
                 if (userData) dispatch(authLogin(userData));
-                Navigate('/');   
+                navigate('/');   
             }
         } catch (error) {
             setError(error.message);
@@ -61,7 +61,7 @@ function Login() {
                 Don&apos;t have any account?
                 &nbsp;
                 <Link
-                to={`/signup`}
+                to="/signup"
                 className='font-medium text-primary transition-all duration-200 hover:underline'
                 >
                     Sign Up
@@ -86,9 +86,8 @@ function Login() {
                     {...register("email", {
                         required: true,
                         validate: {
-                            matchPatern: (value) => {
-                                /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(value) || "Please enter a valid email"
-                            }
+                            matchPatern: (value) => 
+                                /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(value) || "Please enter a valid email",
                         }
                     })}
                     />

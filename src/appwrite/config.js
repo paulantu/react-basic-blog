@@ -19,7 +19,7 @@ export class Services{
 
 
 
-    async createPost({title, description, excerpt, thumbnail, status, slug, user_id}){
+    async createPost({title, description, excerpt, thumbnail, status, slug, userId}){
         try {
             return await this.databases.createDocument(
                 config.appWriteDatabaseId,
@@ -31,11 +31,12 @@ export class Services{
                     excerpt,
                     thumbnail,
                     status,
-                    user_id
+                    userId
                 }
             )
         } catch (error) {
-            throw error
+            console.log("Appwrite serive :: createPost :: error", error);
+            // throw error
         }
     }
 
@@ -43,7 +44,7 @@ export class Services{
 
 
 
-    async updatePost(slug, {title, description, excerpt, thumbnail, status, user_id}){
+    async updatePost(slug, {title, description, excerpt, thumbnail, status}){
         try {
             return await this.databases.updateDocument(
                 config.appWriteDatabaseId,
@@ -58,7 +59,8 @@ export class Services{
                 }
             )
         } catch (error) {
-            throw error
+            console.log("Appwrite serive :: updatePost :: error", error);
+            // throw error
         }
     }
 
@@ -74,7 +76,8 @@ export class Services{
             )   
             return true         
         } catch (error) {
-            throw error
+            // throw error
+            console.log("Appwrite serive :: deletePost :: error", error);
             return false
         }
     }
@@ -90,7 +93,9 @@ export class Services{
                 slug
             )
         } catch (error) {
-            throw error
+            // throw error
+            console.log("Appwrite serive :: getPost :: error", error);
+            return false
         }
     }
     
@@ -120,7 +125,7 @@ export class Services{
     // FileUpload Servicess
 
 
-    async uploadFiles(file){
+    async uploadFile(file){
         try {
             return await this.storage.createFile(
                 config.appWriteBucketId,
@@ -128,16 +133,18 @@ export class Services{
                 file
             )
         } catch (error) {
-            throw error;
+            // throw error;
+            console.log("Appwrite serive :: uploadFile :: error", error);
+            return false
         }
     }
 
 
-    async deleteFile(file_id){
+    async deleteFile(fileId){
         try {
             await this.storage.deleteFile(
                 config.appWriteBucketId,
-                file_id
+                fileId
             )
             return true
         } catch (error) {
@@ -147,10 +154,11 @@ export class Services{
     }
 
 
-    getFilePreview(file_id){
+    getFilePreview(fileId){
+        console.log(this.storage.fileId);
         return this.storage.getFilePreview(
             config.appWriteBucketId,
-            file_id,
+            fileId,
         )
     }
 

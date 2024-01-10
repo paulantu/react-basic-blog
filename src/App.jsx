@@ -23,27 +23,23 @@ function App() {
         .finally(() => setLoading(false))
     }, [])
 
-  
 
 
 
-    if(!loading){
-      return (
-        <>
+
+
+
+    return !loading ? (
+      <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
+        <div className='w-full block'>
           <Header />
           <main>
-            {/* < Outlet /> */}
+          Blog Posts:  <Outlet />
           </main>
           <Footer />
-        </>
-      )
-    }else{
-      return (
-        <>
-          <h1>from else condition</h1>
-        </>
-      )
-    }
+        </div>
+      </div>
+    ) : null
 }
 
 export default App

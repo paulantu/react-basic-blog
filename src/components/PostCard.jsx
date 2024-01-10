@@ -3,6 +3,7 @@ import appWriteService from '../appwrite/config'
 import { Link } from 'react-router-dom'
 
 function PostCard({$id, title, thumbnail, excerpt}) {
+    // console.log($id, title, thumbnail, excerpt)
   return (
     <Link to={`/post/${$id}`}>
         <div className='w-full bg-gray-100 rounded-xl p-4'>
@@ -13,7 +14,7 @@ function PostCard({$id, title, thumbnail, excerpt}) {
                 {title}
             </h2>
             <p className='text-sm'>
-                {excerpt}
+                {/* {excerpt} */}
             </p>
         </div>
 
